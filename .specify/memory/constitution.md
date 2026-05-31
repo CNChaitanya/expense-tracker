@@ -1,50 +1,52 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+## Sync Impact Report
+- Version change: 1.0.0 → 1.1.0
+- List of modified principles:
+  - V. Interoperability & Openness (Updated for web context)
+- Added sections: None
+- Removed sections: CLI Framework reference
+- Templates requiring updates (✅ updated / ⚠ pending):
+  - .specify/templates/plan-template.md ✅
+  - .specify/templates/spec-template.md ✅
+  - .specify/templates/tasks-template.md ✅
+- Follow-up TODOs: Ensure Vite and Tailwind configuration is prioritized in initial setup tasks.
+-->
+
+# ExpTracker Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Financial Accuracy & Precision
+Financial calculations MUST NOT use floating-point arithmetic. All monetary values MUST be handled using integer cents or specialized decimal libraries (e.g., `decimal.js`) to prevent rounding errors.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Privacy & Local-First Data
+The user owns their data. Data MUST be stored locally by default. Any cloud synchronization MUST be opt-in and end-to-end encrypted. No third-party tracking or analytics.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. SQLite-First Persistence
+Persistence MUST use SQLite to ensure data is structured, queryable, and portable. Schema migrations MUST be managed, versioned, and reversible. For web environments, this is achieved via `sql.js` (SQLite in WASM).
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Auditability & Integrity
+Every transaction MUST have a timestamp and a unique identifier. Once recorded, the core attributes of a transaction SHOULD be immutable; corrections should be handled via adjustments or deletions with logged history.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Interoperability & Openness
+Data MUST NOT be locked in. The system MUST support standard export formats (CSV, JSON) to ensure users can transition their data to other tools or perform custom analysis.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technology Stack
+The project will utilize the following core technologies to uphold the principles:
+- **Language**: TypeScript (Strict mode) for type safety and domain modeling.
+- **Frontend**: React with Vite for a fast, modern web experience.
+- **Styling**: Tailwind CSS for consistent and maintainable UI design.
+- **Persistence**: SQLite (via `sql.js`) with Drizzle ORM for type-safe database interactions in the browser.
+- **Testing**: Vitest for fast, unit-tested financial logic and component testing.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+1. **Spec-Driven**: All features must be defined in `.specify/` before implementation.
+2. **Test-First**: Core financial logic and data migrations require 100% test coverage.
+3. **Surgical Edits**: Maintain a clean codebase with minimal, focused changes.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This constitution is the "Supreme Law" of the project. Any implementation that violates these principles MUST be rejected. Amendments to this document require a MINOR or MAJOR version bump and must be documented in the repository history.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+All Pull Requests must include a "Constitution Compliance" check in their description. The `GEMINI.md` file serves as the runtime guidance for the AI agent to ensure alignment with these principles.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.1.0 | **Ratified**: 2026-05-31 | **Last Amended**: 2026-05-31
