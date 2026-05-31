@@ -70,16 +70,22 @@ import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dash');
   const [showForm, setShowForm] = useState(false);
+  const [editExpenseId, setEditExpenseId] = useState<string | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const { isReady, error } = useDatabase();
   const { toasts } = useNotifications();
 
   useGlobalShortcuts(
-    () => setShowForm(true),
+    () => { setEditExpenseId(null); setShowForm(true); },
     () => setShowSearch(true),
     (page) => setCurrentPage(page as Page),
-    () => { setShowForm(false); setShowSearch(false); }
+    () => { setShowForm(false); setShowSearch(false); setEditExpenseId(null); }
   );
+
+  const handleEditExpense = (id: string) => {
+    setEditExpenseId(id);
+    setShowForm(true);
+  };
 
   if (error) {
     return (
@@ -100,8 +106,8 @@ function AppContent() {
   const renderPage = () => {
     switch (currentPage) {
       case 'dash': return <Dashboard />;
-      case 'expenses': return <div className="space-y-6 animate-in fade-in duration-500"><h1 className="text-3xl font-bold">Expenses</h1><ExpenseList /></div>;
-      case 'budgets': return <div className="space-y-6 animate-in fade-in duration-500"><h1 className="text-3xl font-bold">Budgets</h1><BudgetMonitor /></div>;
+      case 'expenses': return <div className="space-y-6 animate-in fade-in duration-500"><h1 className="text-4xl font-black text-gradient">Expenses</h1><ExpenseList onEdit={handleEditExpense} /></div>;
+      case 'budgets': return <div className="space-y-6 animate-in fade-in duration-500"><h1 className="text-4xl font-black text-gradient">Budgets</h1><BudgetMonitor /></div>;
       case 'settings': return <Settings />;
       default: return <Dashboard />;
     }
@@ -113,13 +119,13 @@ function AppContent() {
       {renderPage()}
 
       <button 
-        onClick={() => setShowForm(true)}
-        className="fixed bottom-24 right-6 md:bottom-8 md:right-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-4 rounded-full shadow-[0_0_20px_rgba(102,126,234,0.6)] transition-all hover:scale-110 active:scale-95 z-40 group"
+        onClick={() => { setEditExpenseId(null); setShowForm(true); }}
+        className="fixed bottom-24 right-6 md:bottom-8 md:right-8 bg-gradient-to-br from-primary-start to-primary-end text-white p-4 rounded-full shadow-[0_0_20px_rgba(var(--primary-glow),0.4)] transition-all hover:scale-110 active:scale-95 z-40 group"
       >
         <Plus size={32} className={`transition-transform duration-300 ${showForm ? 'rotate-45' : ''}`} />
       </button>
 
-      {showForm && <ExpenseForm onClose={() => setShowForm(false)} />}
+      {showForm && <ExpenseForm onClose={() => { setShowForm(false); setEditExpenseId(null); }} editExpenseId={editExpenseId} />}
       {showSearch && <GlobalSearch onClose={() => setShowSearch(false)} onNavigate={(p) => setCurrentPage(p as Page)} />}
     </Layout>
   );

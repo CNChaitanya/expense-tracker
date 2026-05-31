@@ -1,4 +1,4 @@
-// sql.js loaded via CDN as window.initSqlJs
+import initSqlJs from 'sql.js';
 // @ts-ignore - Handle potential ESM/CJS interop issues in some environments
 const initSql = typeof initSqlJs === 'function' ? initSqlJs : (initSqlJs as any).default;
 
@@ -47,6 +47,10 @@ export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
       receipt_image TEXT,
       is_recurring INTEGER NOT NULL DEFAULT 0,
       recurring_interval TEXT,
+      mood TEXT,
+      currency TEXT DEFAULT 'INR',
+      original_amount INTEGER,
+      tags TEXT,
       created_at INTEGER NOT NULL
     );
     CREATE TABLE IF NOT EXISTS tags (
@@ -56,6 +60,33 @@ export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
     CREATE TABLE IF NOT EXISTS expense_tags (
       expense_id TEXT NOT NULL REFERENCES expenses(id),
       tag_id TEXT NOT NULL REFERENCES tags(id)
+    );
+    CREATE TABLE IF NOT EXISTS savings_goals (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      target_amount INTEGER NOT NULL,
+      current_amount INTEGER NOT NULL DEFAULT 0,
+      deadline INTEGER,
+      created_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      amount INTEGER NOT NULL,
+      interval TEXT NOT NULL,
+      category_id TEXT REFERENCES categories(id),
+      next_billing INTEGER NOT NULL,
+      emoji TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS templates (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      amount INTEGER,
+      category_id TEXT REFERENCES categories(id),
+      note TEXT,
+      payment_method TEXT,
+      created_at INTEGER NOT NULL
     );
   `);
 
@@ -68,6 +99,7 @@ export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
       { id: uuidv4(), name: 'Shopping', icon: 'ShoppingBag', color: 'text-purple-500', createdAt: new Date() },
       { id: uuidv4(), name: 'Housing', icon: 'Home', color: 'text-green-500', createdAt: new Date() },
       { id: uuidv4(), name: 'Entertainment', icon: 'Film', color: 'text-pink-500', createdAt: new Date() },
+      { id: uuidv4(), name: 'Investment', icon: 'TrendingUp', color: 'text-emerald-500', createdAt: new Date() },
     ];
     
     for (const cat of initialCategories) {
