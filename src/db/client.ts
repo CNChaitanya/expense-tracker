@@ -5,6 +5,7 @@ import type { SQLJsDatabase } from 'drizzle-orm/sql-js';
 import * as schema from './schema';
 import localforage from 'localforage';
 import { v4 as uuidv4 } from 'uuid';
+import sqlWasm from 'sql.js/dist/sql-wasm.wasm?url';
 
 const DB_STORAGE_KEY = 'exptracker_db';
 
@@ -15,7 +16,7 @@ export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
   if (drizzleDb) return drizzleDb;
 
   const SQL = await initSqlJs({
-    locateFile: (file) => `/${file}`,
+    locateFile: () => sqlWasm,
   });
 
   const savedDb: Uint8Array | null = await localforage.getItem(DB_STORAGE_KEY);
