@@ -37,12 +37,12 @@ function Dashboard() {
       
       <SummaryCards spent={totals.spent} income={totals.income} />
 
+      <TrendChart />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CategoryChart />
         <BudgetMonitor />
       </div>
-
-      <TrendChart />
 
       <ExpenseList />
 

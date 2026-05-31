@@ -18,16 +18,16 @@ let drizzleDb: SQLJsDatabase<typeof schema> | null = null;
 export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
   if (drizzleDb) return drizzleDb;
 
-  const SQL = await initSqlJs({
+  const SQL = await initSql({
     locateFile: () => sqlWasm,
   });
 
   const savedDb: Uint8Array | null = await localforage.getItem(DB_STORAGE_KEY);
   
   database = savedDb ? new SQL.Database(savedDb) : new SQL.Database();
-  drizzleDb = drizzle(database, { schema });
+  drizzleDb = drizzle(database!, { schema });
 
-  database.run(`
+  database!.run(`
     CREATE TABLE IF NOT EXISTS categories (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL UNIQUE,
@@ -73,7 +73,7 @@ export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
     for (const cat of initialCategories) {
       drizzleDb.insert(schema.categories).values(cat).run();
     }
-    const data = database.export();
+    const data = database!.export();
     await localforage.setItem(DB_STORAGE_KEY, data);
   }
 
@@ -82,7 +82,7 @@ export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
 
 export const saveDb = async () => {
   if (database) {
-    const data = database.export();
+    const data = database!.export();
     await localforage.setItem(DB_STORAGE_KEY, data);
   }
 };

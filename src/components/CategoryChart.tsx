@@ -23,37 +23,41 @@ export const CategoryChart: React.FC = () => {
     };
   }).filter(d => d.value > 0);
 
-  if (data.length === 0) return null;
-
   return (
-    <div className="glass dark:glass-dark p-6 rounded-3xl h-[400px]">
+    <div className="glass dark:glass-dark p-6 rounded-3xl h-[400px] flex flex-col">
       <h2 className="text-xl font-bold mb-4">Spending by Category</h2>
-      <ResponsiveContainer width="100%" height="90%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={80}
-            paddingAngle={5}
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: theme === 'dark' ? '#1f2937' : '#fff',
-              border: 'none',
-              borderRadius: '12px',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-            }}
-          />
-          <Legend verticalAlign="bottom" height={36}/>
-        </PieChart>
-      </ResponsiveContainer>
+      {data.length > 0 ? (
+        <ResponsiveContainer width="100%" height="90%">
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={80}
+              paddingAngle={5}
+              dataKey="value"
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: theme === 'dark' ? '#1f2937' : '#fff',
+                border: 'none',
+                borderRadius: '12px',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+              }}
+            />
+            <Legend verticalAlign="bottom" height={36}/>
+          </PieChart>
+        </ResponsiveContainer>
+      ) : (
+        <div className="flex-1 flex items-center justify-center text-gray-400 italic">
+          No data available
+        </div>
+      )}
     </div>
   );
 };
