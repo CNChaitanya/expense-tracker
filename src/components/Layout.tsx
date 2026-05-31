@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useTheme } from '../store/ThemeContext';
-import { Sun, Moon, LayoutDashboard, Receipt, Wallet, Settings, Menu, X } from 'lucide-react';
+import { useAppTheme } from '../store/ThemeContext';
+import { LayoutDashboard, Receipt, Wallet, Settings, Menu, X, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuroraBackground } from './visual/AuroraBackground';
+import { CursorGlow } from './visual/CursorGlow';
 
 export type Page = 'dash' | 'expenses' | 'budgets' | 'settings';
 
@@ -19,13 +21,16 @@ const getGreeting = () => {
 };
 
 export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) => {
-  const { theme, toggleTheme } = useTheme();
+  const { isAmoled, toggleAmoled } = useAppTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col md:flex-row relative">
+      <AuroraBackground />
+      <CursorGlow />
+      
       {/* Mobile Header */}
-      <div className="md:hidden glass dark:glass-dark p-4 flex justify-between items-center z-50 sticky top-0 border-b border-white/10">
+      <div className="md:hidden glass p-4 flex justify-between items-center z-50 sticky top-0 border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
             <Wallet size={18} />
@@ -37,18 +42,18 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
         </button>
       </div>
 
-      <nav className={`fixed md:sticky top-0 bottom-0 left-0 z-40 glass dark:glass-dark border-r border-white/10 md:h-screen md:py-8 md:px-4 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0 md:w-20 md:translate-x-0'} md:translate-x-0 overflow-hidden`}>
+      <nav className={`fixed md:sticky top-0 bottom-0 left-0 z-40 glass border-r border-white/10 md:h-screen md:py-8 md:px-4 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0 md:w-20 md:translate-x-0'} md:translate-x-0 overflow-hidden`}>
         <div className="flex flex-col gap-4 w-full h-full min-w-[200px]">
           <div className={`hidden md:flex items-center gap-3 px-4 mb-2 transition-all ${!isSidebarOpen ? 'justify-center px-0' : ''}`}>
             <div className="w-10 h-10 shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
               <Wallet size={24} />
             </div>
-            {isSidebarOpen && <span className="text-xl font-black tracking-tight whitespace-nowrap bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">ExpTracker</span>}
+            {isSidebarOpen && <span className="text-xl font-black tracking-tight whitespace-nowrap bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent uppercase">ExpTracker</span>}
           </div>
 
           {isSidebarOpen && (
             <div className="px-4 mb-6 md:block hidden">
-              <p className="text-sm font-medium text-gray-500">{getGreeting()}</p>
+              <p className="text-xs font-black uppercase tracking-widest text-gray-500 opacity-50">{getGreeting()}</p>
             </div>
           )}
 
@@ -85,22 +90,22 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
               expanded={isSidebarOpen}
             />
             <button 
-              onClick={toggleTheme}
-              className={`flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
+              onClick={toggleAmoled}
+              className={`flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
             >
-              <div className="shrink-0 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-                {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
+              <div className="shrink-0 text-gray-500 group-hover:text-white">
+                {isAmoled ? <Sun size={24} /> : <Moon size={24} />}
               </div>
-              {isSidebarOpen && <span className="font-medium whitespace-nowrap text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>}
+              {isSidebarOpen && <span className="font-bold whitespace-nowrap text-gray-500 group-hover:text-white">{isAmoled ? 'Light Mode' : 'AMOLED Mode'}</span>}
             </button>
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={`hidden md:flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
+              className={`hidden md:flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
             >
-               <div className="shrink-0 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+               <div className="shrink-0 text-gray-500 group-hover:text-white">
                   {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
                </div>
-               {isSidebarOpen && <span className="font-medium whitespace-nowrap text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">Collapse</span>}
+               {isSidebarOpen && <span className="font-bold whitespace-nowrap text-gray-500 group-hover:text-white">Collapse</span>}
             </button>
           </div>
         </div>
@@ -109,12 +114,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
       {/* Mobile backdrop overlay */}
       {isSidebarOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-30" 
+          className="md:hidden fixed inset-0 bg-black/50 z-30 backdrop-blur-sm" 
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      <main className="flex-1 p-4 md:p-8 lg:p-10 w-full max-w-full overflow-x-hidden relative">
+      <main className="flex-1 p-4 md:p-8 lg:p-12 w-full max-w-full overflow-x-hidden relative">
         <div className="max-w-7xl mx-auto h-full">
           <AnimatePresence mode="wait">
             <motion.div
@@ -137,7 +142,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
 const NavItem: React.FC<{ icon: React.ReactNode; label: string; active?: boolean; onClick: () => void; expanded: boolean }> = ({ icon, label, active, onClick, expanded }) => (
   <button 
     onClick={onClick}
-    className={`flex items-center gap-4 p-3 rounded-2xl group transition-all w-full relative overflow-hidden ${!expanded ? 'justify-center' : ''} ${active ? 'text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-white/5'}`}
+    className={`flex items-center gap-4 p-3 rounded-2xl group transition-all w-full relative overflow-hidden ${!expanded ? 'justify-center' : ''} ${active ? 'text-white' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
   >
     {active && (
       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-purple-500/20" />
@@ -146,6 +151,6 @@ const NavItem: React.FC<{ icon: React.ReactNode; label: string; active?: boolean
       <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-r-full" />
     )}
     <span className="shrink-0 relative z-10">{icon}</span>
-    {expanded && <span className="text-sm font-semibold tracking-wide whitespace-nowrap relative z-10">{label}</span>}
+    {expanded && <span className="text-sm font-black tracking-wide whitespace-nowrap relative z-10">{label}</span>}
   </button>
 );

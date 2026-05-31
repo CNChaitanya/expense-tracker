@@ -1,11 +1,9 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useExpenses } from '../hooks/useExpenses';
-import { useTheme } from '../store/ThemeContext';
 
 export const TrendChart: React.FC = () => {
   const { expenses } = useExpenses();
-  const { theme } = useTheme();
 
   // Group expenses by day for the current month
   const now = new Date();
@@ -34,34 +32,35 @@ export const TrendChart: React.FC = () => {
       <h2 className="text-xl font-bold mb-4">Daily Spending Trend</h2>
       <ResponsiveContainer width="100%" height="90%">
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
           <XAxis 
             dataKey="day" 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12, fontWeight: 600 }}
           />
           <YAxis 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12, fontWeight: 600 }}
             tickFormatter={(val) => `₹${val}`}
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: theme === 'dark' ? '#1f2937' : '#fff',
-              border: 'none',
+              backgroundColor: 'rgba(3, 7, 18, 0.8)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               borderRadius: '12px',
+              backdropFilter: 'blur(10px)',
               boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
             }}
           />
           <Line 
             type="monotone" 
             dataKey="amount" 
-            stroke="#aa3bff" 
-            strokeWidth={3} 
-            dot={{ r: 4, fill: '#aa3bff', strokeWidth: 2, stroke: '#fff' }} 
-            activeDot={{ r: 6, strokeWidth: 0 }}
+            stroke="var(--primary-start)" 
+            strokeWidth={4} 
+            dot={{ r: 0 }} 
+            activeDot={{ r: 6, strokeWidth: 0, fill: 'var(--primary-start)' }}
           />
         </LineChart>
       </ResponsiveContainer>

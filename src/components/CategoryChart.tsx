@@ -1,11 +1,9 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { useExpenses } from '../hooks/useExpenses';
-import { useTheme } from '../store/ThemeContext';
 
 export const CategoryChart: React.FC = () => {
   const { expenses, categories } = useExpenses();
-  const { theme } = useTheme();
 
   const data = categories.map(cat => {
     const total = expenses
@@ -44,9 +42,10 @@ export const CategoryChart: React.FC = () => {
             </Pie>
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: theme === 'dark' ? '#1f2937' : '#fff',
-                border: 'none',
+                backgroundColor: 'rgba(3, 7, 18, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '12px',
+                backdropFilter: 'blur(10px)',
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
               }}
             />
