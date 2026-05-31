@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useExpenses, useTemplates } from '../hooks/useExpenses';
 import { X, Sparkles, MessageSquare, Tag, Plus } from 'lucide-react';
 import { ReceiptUploader } from './ReceiptUploader';
+import { VoiceInput } from './VoiceInput';
 import { playSound } from '../lib/sounds';
 import { motion } from 'framer-motion';
 import { modalVariants } from '../lib/animations';
@@ -62,6 +63,17 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editExpenseId
       categoryId: t.categoryId || formData.categoryId,
       note: t.note || formData.note,
       paymentMethod: t.paymentMethod || formData.paymentMethod,
+    });
+    playSound('success');
+  };
+
+  const handleVoiceTranscript = (amount: string, categoryName: string, note: string) => {
+    const category = categories.find(c => c.name.toLowerCase() === categoryName.toLowerCase());
+    setFormData({
+      ...formData,
+      amount: amount || formData.amount,
+      categoryId: category?.id || formData.categoryId,
+      note: note || formData.note,
     });
     playSound('success');
   };
@@ -236,7 +248,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editExpenseId
                 <input
                   type="date"
                   required
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-4 font-bold transition-all focus:ring-4 focus:ring-primary-start/10 focus:border-primary-start"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-4 font-bold transition-all focus:ring-4 focus:ring-primary-start/10 focus:border-primary-start"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 />
@@ -262,7 +274,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editExpenseId
                 <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
                 <input
                   type="text"
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-4 font-medium transition-all focus:ring-4 focus:ring-primary-start/10 focus:border-primary-start"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 font-medium transition-all focus:ring-4 focus:ring-primary-start/10 focus:border-primary-start"
                   placeholder="trip, office, food-porn"
                   value={formData.tags}
                   onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
@@ -271,10 +283,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editExpenseId
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
-              <ReceiptUploader 
-                onUpload={(img) => setFormData({ ...formData, receiptImage: img })} 
-                currentImage={formData.receiptImage} 
-              />
+              <div className="flex items-center gap-4">
+                 <ReceiptUploader 
+                    onUpload={(img) => setFormData({ ...formData, receiptImage: img })} 
+                    currentImage={formData.receiptImage} 
+                 />
+                 <VoiceInput onTranscript={handleVoiceTranscript} />
+              </div>
               
               {!editExpenseId && (
                 <button 

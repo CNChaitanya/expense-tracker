@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAppTheme } from '../store/ThemeContext';
-import { LayoutDashboard, Receipt, Wallet, Settings, Menu, X, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, Receipt, Wallet, Settings, Menu, X, Sun, Bot, Target, RefreshCw, Scissors } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuroraBackground } from './visual/AuroraBackground';
 import { CursorGlow } from './visual/CursorGlow';
+import { useGamification } from '../hooks/useGamification';
 
-export type Page = 'dash' | 'expenses' | 'budgets' | 'settings';
+export type Page = 'dash' | 'expenses' | 'budgets' | 'settings' | 'coach' | 'goals' | 'subscriptions' | 'splitter' | 'timeline';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,7 +23,19 @@ const getGreeting = () => {
 
 export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) => {
   const { isAmoled, toggleAmoled } = useAppTheme();
+  const { level, levelName, progress } = useGamification();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const navItems = [
+    { id: 'dash', label: 'Dashboard', icon: <LayoutDashboard size={24} /> },
+    { id: 'expenses', label: 'Expenses', icon: <Receipt size={24} /> },
+    { id: 'budgets', label: 'Budgets', icon: <Wallet size={24} /> },
+    { id: 'goals', label: 'Goals', icon: <Target size={24} /> },
+    { id: 'subscriptions', label: 'Subscriptions', icon: <RefreshCw size={24} /> },
+    { id: 'splitter', label: 'Bill Splitter', icon: <Scissors size={24} /> },
+    { id: 'coach', label: 'AI Coach', icon: <Bot size={24} /> },
+    { id: 'settings', label: 'Settings', icon: <Settings size={24} /> },
+  ];
 
   return (
     <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col md:flex-row relative">
@@ -32,7 +45,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
       {/* Mobile Header */}
       <div className="md:hidden glass p-4 flex justify-between items-center z-50 sticky top-0 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+          <div className="w-8 h-8 bg-gradient-to-br from-primary-start to-primary-end rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-start/30">
             <Wallet size={18} />
           </div>
           <span className="font-bold tracking-tight">ExpTracker</span>
@@ -45,56 +58,53 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
       <nav className={`fixed md:sticky top-0 bottom-0 left-0 z-40 glass border-r border-white/10 md:h-screen md:py-8 md:px-4 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0 md:w-20 md:translate-x-0'} md:translate-x-0 overflow-hidden`}>
         <div className="flex flex-col gap-4 w-full h-full min-w-[200px]">
           <div className={`hidden md:flex items-center gap-3 px-4 mb-2 transition-all ${!isSidebarOpen ? 'justify-center px-0' : ''}`}>
-            <div className="w-10 h-10 shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+            <div className="w-10 h-10 shrink-0 bg-gradient-to-br from-primary-start to-primary-end rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-start/30">
               <Wallet size={24} />
             </div>
-            {isSidebarOpen && <span className="text-xl font-black tracking-tight whitespace-nowrap bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent uppercase">ExpTracker</span>}
+            {isSidebarOpen && <span className="text-xl font-black tracking-tight whitespace-nowrap bg-gradient-to-br from-primary-start to-primary-end bg-clip-text text-transparent uppercase">ExpTracker</span>}
           </div>
 
           {isSidebarOpen && (
             <div className="px-4 mb-6 md:block hidden">
-              <p className="text-xs font-black uppercase tracking-widest text-gray-500 opacity-50">{getGreeting()}</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 opacity-50 mb-4">{getGreeting()}</p>
+              
+              {/* XP Progress Bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-end">
+                  <span className="text-[10px] font-black text-primary-start uppercase tracking-tighter">{levelName}</span>
+                  <span className="text-[10px] font-bold text-gray-500">LVL {level}</span>
+                </div>
+                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    className="h-full bg-gradient-to-r from-primary-start to-primary-end shadow-[0_0_10px_rgba(var(--primary-glow),0.3)]"
+                  />
+                </div>
+              </div>
             </div>
           )}
 
-          <div className="flex-1 space-y-2 mt-16 md:mt-0 px-2">
-            <NavItem 
-              icon={<LayoutDashboard size={24} />} 
-              label="Dashboard" 
-              active={currentPage === 'dash'} 
-              onClick={() => { onPageChange('dash'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
-              expanded={isSidebarOpen}
-            />
-            <NavItem 
-              icon={<Receipt size={24} />} 
-              label="Expenses" 
-              active={currentPage === 'expenses'} 
-              onClick={() => { onPageChange('expenses'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
-              expanded={isSidebarOpen}
-            />
-            <NavItem 
-              icon={<Wallet size={24} />} 
-              label="Budgets" 
-              active={currentPage === 'budgets'} 
-              onClick={() => { onPageChange('budgets'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
-              expanded={isSidebarOpen}
-            />
+          <div className="flex-1 space-y-1 mt-16 md:mt-0 px-2 overflow-y-auto no-scrollbar">
+            {navItems.map(item => (
+              <NavItem 
+                key={item.id}
+                icon={item.icon} 
+                label={item.label} 
+                active={currentPage === item.id || (item.id === 'expenses' && currentPage === 'timeline')} 
+                onClick={() => { onPageChange(item.id as Page); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
+                expanded={isSidebarOpen}
+              />
+            ))}
           </div>
 
           <div className="space-y-2 px-2 pb-6 md:pb-0">
-            <NavItem 
-              icon={<Settings size={24} />} 
-              label="Settings" 
-              active={currentPage === 'settings'} 
-              onClick={() => { onPageChange('settings'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
-              expanded={isSidebarOpen}
-            />
             <button 
               onClick={toggleAmoled}
               className={`flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
             >
               <div className="shrink-0 text-gray-500 group-hover:text-white">
-                {isAmoled ? <Sun size={24} /> : <Moon size={24} />}
+                <Sun size={24} />
               </div>
               {isSidebarOpen && <span className="font-bold whitespace-nowrap text-gray-500 group-hover:text-white">{isAmoled ? 'Light Mode' : 'AMOLED Mode'}</span>}
             </button>
@@ -114,7 +124,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
       {/* Mobile backdrop overlay */}
       {isSidebarOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-30 backdrop-blur-sm" 
+          className="md:hidden fixed inset-0 bg-black/60 z-30 backdrop-blur-sm" 
           onClick={() => setIsSidebarOpen(false)}
         />
       )}

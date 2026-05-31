@@ -2,15 +2,18 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useExpenses } from '../hooks/useExpenses';
 import { exportToCSV, exportToJSON } from '../lib/export';
 import { parseCSV } from '../lib/import';
-import { Download, Upload, Shield, Database, Trash2, Volume2, VolumeX, Settings as SettingsIcon, Palette, Zap } from 'lucide-react';
+import { Download, Upload, Shield, Database, Trash2, Volume2, VolumeX, Settings as SettingsIcon, Palette, Zap, FileText, Sparkles } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { useAppTheme } from '../store/ThemeContext';
+import { BankImport } from './BankImport';
+import { AnimatePresence } from 'framer-motion';
 
 export const Settings: React.FC = () => {
   const { expenses, categories, addExpense } = useExpenses();
   const { isAmoled, toggleAmoled } = useAppTheme();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [showBankImport, setShowBankImport] = useState(false);
 
   useEffect(() => {
     setSoundEnabled(localStorage.getItem('sound_effects') === 'true');
@@ -90,6 +93,17 @@ export const Settings: React.FC = () => {
             
             <div className="space-y-4">
               <div className="flex flex-col gap-2">
+                <button 
+                   onClick={() => setShowBankImport(true)}
+                   className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-primary-start/20 to-transparent border border-primary-start/20 rounded-2xl hover:from-primary-start/40 transition-all group"
+                >
+                   <div className="flex items-center gap-3">
+                      <FileText size={20} className="text-primary-start" />
+                      <span className="font-black text-primary-start uppercase tracking-tighter">Bank / UPI Import</span>
+                   </div>
+                   <Sparkles size={16} className="text-primary-start animate-pulse" />
+                </button>
+
                 <button 
                   onClick={() => exportToCSV(expenses, categories)}
                   className="w-full flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-primary-start hover:text-white transition-all group"
@@ -172,6 +186,10 @@ export const Settings: React.FC = () => {
           </section>
         </div>
       </div>
+
+      <AnimatePresence>
+         {showBankImport && <BankImport onClose={() => setShowBankImport(false)} />}
+      </AnimatePresence>
     </div>
   );
 };
