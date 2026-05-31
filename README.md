@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# ExpTracker 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ExpTracker is a premium, local-first web application designed for delightful and private financial management. Built with a modern tech stack focusing on performance, aesthetics (Glassmorphism), and user privacy.
 
-Currently, two official plugins are available:
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Tech Stack](https://img.shields.io/badge/stack-React%20%7C%20Vite%20%7C%20SQLite-purple.svg)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📊 Powerful Analytics
+- **Spending Heatmap**: GitHub-style 12-week visual tracking of your daily spending.
+- **Interactive Charts**: Category distribution (Donut) and daily trends (Line) powered by Recharts.
+- **Smart Insights**: Automated data analysis telling you where your money goes and if you're on track.
 
-## Expanding the ESLint configuration
+### 🛡️ Privacy & Reliability
+- **Local-First**: Your data never leaves your device. Everything is stored in a local SQLite database (via `sql.js`).
+- **Offline Ready**: Full functionality without an internet connection using IndexedDB persistence.
+- **Data Portability**: Export your entire history to CSV or JSON, or import from existing spreadsheets.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🎨 Delightful UX
+- **Glassmorphism UI**: High-end aesthetic with `backdrop-filter` effects and smooth animations.
+- **Gamified Savings**: Maintain "Spending Streaks" 🔥 and earn an A+ on your Monthly Report Card.
+- **Premium Interactivity**: Animated money counters, sound effects, and confetti celebrations.
+- **Global Search**: Command palette (`Ctrl+K`) for instant access to every transaction.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Frontend**: [React 18](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Database**: [SQLite (WASM)](https://sql.js.org/) + [Drizzle ORM](https://orm.drizzle.team/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) + [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti)
+- **State/Persistence**: [localforage](https://localforage.github.io/localForage/) + [React Context](https://reactjs.org/docs/context.html)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [npm](https://www.npmjs.com/)
+
+### Installation
+1. Clone the repository (or copy the folder):
+   ```bash
+   git clone <your-repo-url>
+   cd expense-tracker
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 📂 Project Structure
+
+```text
+expense-tracker/
+├── src/
+│   ├── components/      # Glassmorphism UI components & charts
+│   ├── db/              # Drizzle schema and SQLite client setup
+│   ├── hooks/           # Custom logic (useExpenses, useStreaks, useShortcuts)
+│   ├── lib/             # Utilities (Currency, Import/Export, Confetti)
+│   ├── store/           # Global Theme & Database context
+│   └── App.tsx          # Main routing and navigation
+├── public/              # Static assets and WASM binary
+├── specs/               # Spec-Driven Development documentation
+└── .specify/            # AI Agent orchestration memory (SDD)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⌨️ Keyboard Shortcuts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `1` / `2` / `3` / `4` — Navigate between pages
+- `N` or `+` — Open "Add Transaction" modal
+- `Ctrl + K` — Open Global Search
+- `Esc` — Close any open modal
+
+---
+
+## 📜 License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+*Created with ❤️ by Gemini CLI using Spec-Driven Development (SDD).*
