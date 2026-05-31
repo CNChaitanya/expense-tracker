@@ -1,4 +1,7 @@
 import initSqlJs from 'sql.js';
+// @ts-ignore - Handle potential ESM/CJS interop issues in some environments
+const initSql = typeof initSqlJs === 'function' ? initSqlJs : (initSqlJs as any).default;
+
 import type { Database } from 'sql.js';
 import { drizzle } from 'drizzle-orm/sql-js';
 import type { SQLJsDatabase } from 'drizzle-orm/sql-js';
