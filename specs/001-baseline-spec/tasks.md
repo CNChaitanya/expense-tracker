@@ -22,10 +22,10 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 [P] Initialize Vite project with React and TypeScript in `/`
-- [ ] T002 [P] Install core dependencies: `sql.js`, `drizzle-orm`, `tailwind-css`, `lucide-react`, `recharts`, `decimal.js`
-- [ ] T003 [P] Configure Tailwind CSS with glassmorphism utility classes in `tailwind.config.js`
-- [ ] T004 [P] Configure Vitest for unit testing in `vitest.config.ts`
+- [x] T001 [P] Initialize Vite project with React and TypeScript in `/`
+- [x] T002 [P] Install core dependencies: `sql.js`, `drizzle-orm`, `tailwind-css`, `lucide-react`, `recharts`, `decimal.js`
+- [x] T003 [P] Configure Tailwind CSS with glassmorphism utility classes in `tailwind.config.js`
+- [x] T004 [P] Configure Vitest for unit testing in `vitest.config.ts`
 
 ---
 
@@ -35,11 +35,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Setup Drizzle schema and SQLite migration logic in `src/db/schema.ts`
-- [ ] T006 Implement `sql.js` initialization and IndexedDB sync logic in `src/db/client.ts`
-- [ ] T007 [P] Create `useDatabase` hook for shared DB access in `src/hooks/useDatabase.ts`
-- [ ] T008 [P] Implement `Decimal` utility for financial calculations in `src/lib/currency.ts`
-- [ ] T009 [P] Setup base layout with Dark/Light mode provider in `src/components/Layout.tsx`
+- [x] T005 Setup Drizzle schema and SQLite migration logic in `src/db/schema.ts`
+- [x] T006 Implement `sql.js` initialization and IndexedDB sync logic in `src/db/client.ts`
+- [x] T007 [P] Create `useDatabase` hook for shared DB access in `src/hooks/useDatabase.ts`
+- [x] T008 [P] Implement `Decimal` utility for financial calculations in `src/lib/currency.ts`
+- [x] T009 [P] Setup base layout with Dark/Light mode provider in `src/components/Layout.tsx`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -53,12 +53,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Implement Category and Expense models in `src/db/schema.ts`
-- [ ] T011 [P] [US1] Create expense entry form with validation in `src/components/ExpenseForm.tsx`
-- [ ] T012 [P] [US1] Implement `useExpenses` hook for CRUD operations in `src/hooks/useExpenses.ts`
-- [ ] T013 [US1] Add receipt attachment logic (Base64) in `src/components/ReceiptUploader.tsx`
-- [ ] T014 [US1] Implement expense list view with filtering in `src/components/ExpenseList.tsx`
-- [ ] T015 [US1] Add recurring expense engine (on app load) in `src/lib/recurring.ts`
+- [x] T010 [P] [US1] Implement Category and Expense models in `src/db/schema.ts`
+- [x] T011 [P] [US1] Create expense entry form with validation in `src/components/ExpenseForm.tsx`
+- [x] T012 [P] [US1] Implement `useExpenses` hook for CRUD operations in `src/hooks/useExpenses.ts`
+- [x] T013 [US1] Add receipt attachment logic (Base64) in `src/components/ReceiptUploader.tsx`
+- [x] T014 [US1] Implement expense list view with filtering in `src/components/ExpenseList.tsx`
+- [x] T015 [US1] Add recurring expense engine (on app load) in `src/lib/recurring.ts`
 
 **Checkpoint**: At this point, User Story 1 is fully functional as an MVP.
 
