@@ -35,7 +35,7 @@ export const BudgetMonitor: React.FC = () => {
               <div>
                 <span className="font-bold">{stat.name}</span>
                 <span className="text-xs text-gray-500 ml-2">
-                  ${formatCurrency(stat.spent)} of ${formatCurrency(stat.budgetAmount)}
+                  ₹{formatCurrency(stat.spent)} of ₹{formatCurrency(stat.budgetAmount)}
                 </span>
               </div>
               <span className={`text-sm font-bold ${stat.percentage >= 80 ? 'text-red-500' : 'text-accent'}`}>

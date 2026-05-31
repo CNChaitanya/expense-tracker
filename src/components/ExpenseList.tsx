@@ -3,6 +3,10 @@ import { useExpenses } from '../hooks/useExpenses';
 import { formatCurrency } from '../lib/currency';
 import { Trash2, ShoppingBag, Utensils, Bus, Home, Film, HelpCircle } from 'lucide-react';
 
+import { playSound } from '../lib/sounds';
+
+import { EmptyWallet } from './EmptyStates';
+
 const ICON_MAP: Record<string, any> = {
   Utensils,
   Bus,
@@ -16,10 +20,15 @@ export const ExpenseList: React.FC = () => {
 
   const getCategory = (id: string) => categories.find(c => c.id === id);
 
+  const handleDelete = (id: string) => {
+    playSound('delete');
+    deleteExpense(id);
+  };
+
   if (expenses.length === 0) {
     return (
-      <div className="glass dark:glass-dark p-8 rounded-3xl min-h-[400px] flex items-center justify-center text-gray-400 italic">
-        No transactions found. Click '+' to add one.
+      <div className="glass dark:glass-dark rounded-3xl min-h-[400px] flex items-center justify-center">
+        <EmptyWallet />
       </div>
     );
   }
@@ -47,10 +56,10 @@ export const ExpenseList: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <div className={`text-lg font-bold ${expense.type === 'expense' ? 'text-red-500' : 'text-green-500'}`}>
-                  {expense.type === 'expense' ? '-' : '+'}${formatCurrency(expense.amount)}
+                  {expense.type === 'expense' ? '-' : '+'}₹{formatCurrency(expense.amount)}
                 </div>
                 <button 
-                  onClick={() => deleteExpense(expense.id)}
+                  onClick={() => handleDelete(expense.id)}
                   className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
                 >
                   <Trash2 size={18} />

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../store/ThemeContext';
-import { Sun, Moon, LayoutDashboard, Receipt, Wallet, Settings } from 'lucide-react';
+import { Sun, Moon, LayoutDashboard, Receipt, Wallet, Settings, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export type Page = 'dash' | 'expenses' | 'budgets' | 'settings';
 
@@ -10,69 +11,141 @@ interface LayoutProps {
   onPageChange: (page: Page) => void;
 }
 
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning! ☀️';
+  if (hour < 18) return 'Good afternoon! 🌤️';
+  return 'Good evening! 🌙';
+};
+
 export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) => {
   const { theme, toggleTheme } = useTheme();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col md:flex-row">
-      <nav className="fixed bottom-0 left-0 right-0 glass dark:glass-dark border-t border-gray-200 dark:border-gray-800 px-6 py-3 flex justify-between items-center z-50 md:sticky md:top-0 md:flex-col md:w-64 md:h-screen md:border-r md:border-t-0 md:py-8 md:px-4">
-        <div className="flex md:flex-col items-center md:items-stretch gap-8 md:gap-4 w-full">
-          <div className="hidden md:flex items-center gap-3 px-4 mb-8">
-            <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white shadow-lg shadow-accent/20">
+    <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col md:flex-row relative">
+      {/* Mobile Header */}
+      <div className="md:hidden glass dark:glass-dark p-4 flex justify-between items-center z-50 sticky top-0 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+            <Wallet size={18} />
+          </div>
+          <span className="font-bold tracking-tight">ExpTracker</span>
+        </div>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-xl bg-white/5">
+          {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
+      <nav className={`fixed md:sticky top-0 bottom-0 left-0 z-40 glass dark:glass-dark border-r border-white/10 md:h-screen md:py-8 md:px-4 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0 md:w-20 md:translate-x-0'} md:translate-x-0 overflow-hidden`}>
+        <div className="flex flex-col gap-4 w-full h-full min-w-[200px]">
+          <div className={`hidden md:flex items-center gap-3 px-4 mb-2 transition-all ${!isSidebarOpen ? 'justify-center px-0' : ''}`}>
+            <div className="w-10 h-10 shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
               <Wallet size={24} />
             </div>
-            <span className="text-xl font-bold tracking-tight">ExpTracker</span>
+            {isSidebarOpen && <span className="text-xl font-black tracking-tight whitespace-nowrap bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent">ExpTracker</span>}
           </div>
 
-          <NavItem 
-            icon={<LayoutDashboard size={24} />} 
-            label="Dashboard" 
-            active={currentPage === 'dash'} 
-            onClick={() => onPageChange('dash')}
-          />
-          <NavItem 
-            icon={<Receipt size={24} />} 
-            label="Expenses" 
-            active={currentPage === 'expenses'} 
-            onClick={() => onPageChange('expenses')}
-          />
-          <NavItem 
-            icon={<Wallet size={24} />} 
-            label="Budgets" 
-            active={currentPage === 'budgets'} 
-            onClick={() => onPageChange('budgets')}
-          />
-          <NavItem 
-            icon={<Settings size={24} />} 
-            label="Settings" 
-            active={currentPage === 'settings'} 
-            onClick={() => onPageChange('settings')}
-          />
+          {isSidebarOpen && (
+            <div className="px-4 mb-6 md:block hidden">
+              <p className="text-sm font-medium text-gray-500">{getGreeting()}</p>
+            </div>
+          )}
+
+          <div className="flex-1 space-y-2 mt-16 md:mt-0 px-2">
+            <NavItem 
+              icon={<LayoutDashboard size={24} />} 
+              label="Dashboard" 
+              active={currentPage === 'dash'} 
+              onClick={() => { onPageChange('dash'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
+              expanded={isSidebarOpen}
+            />
+            <NavItem 
+              icon={<Receipt size={24} />} 
+              label="Expenses" 
+              active={currentPage === 'expenses'} 
+              onClick={() => { onPageChange('expenses'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
+              expanded={isSidebarOpen}
+            />
+            <NavItem 
+              icon={<Wallet size={24} />} 
+              label="Budgets" 
+              active={currentPage === 'budgets'} 
+              onClick={() => { onPageChange('budgets'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
+              expanded={isSidebarOpen}
+            />
+          </div>
+
+          <div className="space-y-2 px-2 pb-6 md:pb-0">
+            <NavItem 
+              icon={<Settings size={24} />} 
+              label="Settings" 
+              active={currentPage === 'settings'} 
+              onClick={() => { onPageChange('settings'); if (window.innerWidth < 768) setIsSidebarOpen(false); }}
+              expanded={isSidebarOpen}
+            />
+            <button 
+              onClick={toggleTheme}
+              className={`flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
+            >
+              <div className="shrink-0 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
+              </div>
+              {isSidebarOpen && <span className="font-medium whitespace-nowrap text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>}
+            </button>
+            <button 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={`hidden md:flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
+            >
+               <div className="shrink-0 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                  {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+               </div>
+               {isSidebarOpen && <span className="font-medium whitespace-nowrap text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">Collapse</span>}
+            </button>
+          </div>
         </div>
-        <button 
-          onClick={toggleTheme}
-          className="p-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors flex items-center gap-3 md:w-full md:mt-auto"
-        >
-          {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
-          <span className="hidden md:inline font-medium">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-        </button>
       </nav>
 
-      <main className="flex-1 pb-24 md:pb-8 p-6 lg:p-10 w-full max-w-full overflow-x-hidden">
-        <div className="max-w-7xl mx-auto">
-          {children}
+      {/* Mobile backdrop overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/50 z-30" 
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <main className="flex-1 p-4 md:p-8 lg:p-10 w-full max-w-full overflow-x-hidden relative">
+        <div className="max-w-7xl mx-auto h-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="h-full"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </div>
   );
 };
 
-const NavItem: React.FC<{ icon: React.ReactNode; label: string; active?: boolean; onClick: () => void }> = ({ icon, label, active, onClick }) => (
+const NavItem: React.FC<{ icon: React.ReactNode; label: string; active?: boolean; onClick: () => void; expanded: boolean }> = ({ icon, label, active, onClick, expanded }) => (
   <button 
     onClick={onClick}
-    className={`flex flex-col md:flex-row items-center gap-1 md:gap-4 p-2 md:px-4 md:py-3 rounded-2xl group transition-all w-full ${active ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300'}`}
+    className={`flex items-center gap-4 p-3 rounded-2xl group transition-all w-full relative overflow-hidden ${!expanded ? 'justify-center' : ''} ${active ? 'text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-white/5'}`}
   >
-    <span className="shrink-0">{icon}</span>
-    <span className="text-[10px] md:text-sm font-semibold tracking-wide">{label}</span>
+    {active && (
+      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-purple-500/20" />
+    )}
+    {active && expanded && (
+      <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-r-full" />
+    )}
+    <span className="shrink-0 relative z-10">{icon}</span>
+    {expanded && <span className="text-sm font-semibold tracking-wide whitespace-nowrap relative z-10">{label}</span>}
   </button>
 );

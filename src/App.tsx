@@ -16,8 +16,14 @@ import { DashboardSkeleton } from './components/Skeleton';
 import { useNotifications } from './hooks/useNotification';
 import { ToastContainer } from './components/ToastContainer';
 
+import { ExpenseHeatmap } from './components/ExpenseHeatmap';
+
+import { StreakCounter } from './components/StreakCounter';
+import { SmartInsights } from './components/SmartInsights';
+
+import { MonthlyReportCard } from './components/MonthlyReportCard';
+
 function Dashboard() {
-  const [showForm, setShowForm] = useState(false);
   const { expenses } = useExpenses();
 
   const totals = expenses.reduce((acc, curr) => {
@@ -29,11 +35,18 @@ function Dashboard() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <header className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Dashboard</h1>
+          <StreakCounter />
+        </div>
         <div className="glass dark:glass-dark px-4 py-2 rounded-xl text-sm font-medium">
           {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
         </div>
       </header>
+
+      <SmartInsights />
+      
+      <MonthlyReportCard />
       
       <SummaryCards spent={totals.spent} income={totals.income} />
 
@@ -44,24 +57,29 @@ function Dashboard() {
         <BudgetMonitor />
       </div>
 
+      <ExpenseHeatmap />
+
       <ExpenseList />
-
-      <button 
-        onClick={() => setShowForm(true)}
-        className="fixed bottom-24 right-6 md:bottom-8 md:right-8 bg-accent hover:bg-accent-hover text-white p-4 rounded-2xl shadow-xl shadow-accent/40 transition-all hover:scale-110 active:scale-95 z-40"
-      >
-        <Plus size={32} />
-      </button>
-
-      {showForm && <ExpenseForm onClose={() => setShowForm(false)} />}
     </div>
   );
 }
 
+import { GlobalSearch } from './components/GlobalSearch';
+import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
+
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dash');
+  const [showForm, setShowForm] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const { isReady, error } = useDatabase();
   const { toasts } = useNotifications();
+
+  useGlobalShortcuts(
+    () => setShowForm(true),
+    () => setShowSearch(true),
+    (page) => setCurrentPage(page as Page),
+    () => { setShowForm(false); setShowSearch(false); }
+  );
 
   if (error) {
     return (
@@ -93,6 +111,16 @@ function AppContent() {
     <Layout currentPage={currentPage} onPageChange={setCurrentPage}>
       <ToastContainer toasts={toasts} />
       {renderPage()}
+
+      <button 
+        onClick={() => setShowForm(true)}
+        className="fixed bottom-24 right-6 md:bottom-8 md:right-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-4 rounded-full shadow-[0_0_20px_rgba(102,126,234,0.6)] transition-all hover:scale-110 active:scale-95 z-40 group"
+      >
+        <Plus size={32} className={`transition-transform duration-300 ${showForm ? 'rotate-45' : ''}`} />
+      </button>
+
+      {showForm && <ExpenseForm onClose={() => setShowForm(false)} />}
+      {showSearch && <GlobalSearch onClose={() => setShowSearch(false)} onNavigate={(p) => setCurrentPage(p as Page)} />}
     </Layout>
   );
 }

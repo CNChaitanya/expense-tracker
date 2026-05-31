@@ -4,6 +4,8 @@ import { X } from 'lucide-react';
 
 import { ReceiptUploader } from './ReceiptUploader';
 
+import { playSound } from '../lib/sounds';
+
 interface ExpenseFormProps {
   onClose: () => void;
 }
@@ -34,6 +36,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose }) => {
       isRecurring: false,
       receiptImage: formData.receiptImage,
     });
+    playSound('add');
     onClose();
   };
 

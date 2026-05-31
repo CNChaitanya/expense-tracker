@@ -45,7 +45,7 @@ export const TrendChart: React.FC = () => {
             axisLine={false} 
             tickLine={false} 
             tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280', fontSize: 12 }}
-            tickFormatter={(val) => `$${val}`}
+            tickFormatter={(val) => `₹${val}`}
           />
           <Tooltip 
             contentStyle={{ 
