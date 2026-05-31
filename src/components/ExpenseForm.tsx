@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useExpenses } from '../hooks/useExpenses';
-import { X, Camera } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import { ReceiptUploader } from './ReceiptUploader';
 

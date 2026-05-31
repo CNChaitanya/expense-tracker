@@ -1,5 +1,7 @@
-import initSqlJs, { Database } from 'sql.js';
-import { drizzle, SqlJsDatabase } from 'drizzle-orm/sql-js';
+import initSqlJs from 'sql.js';
+import type { Database } from 'sql.js';
+import { drizzle } from 'drizzle-orm/sql-js';
+import type { SQLJsDatabase } from 'drizzle-orm/sql-js';
 import * as schema from './schema';
 import localforage from 'localforage';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 const DB_STORAGE_KEY = 'exptracker_db';
 
 let database: Database | null = null;
-let drizzleDb: SqlJsDatabase<typeof schema> | null = null;
+let drizzleDb: SQLJsDatabase<typeof schema> | null = null;
 
-export const initDb = async (): Promise<SqlJsDatabase<typeof schema>> => {
+export const initDb = async (): Promise<SQLJsDatabase<typeof schema>> => {
   if (drizzleDb) return drizzleDb;
 
   const SQL = await initSqlJs({

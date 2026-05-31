@@ -72,11 +72,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T016 [P] [US2] Create Budget management hook in `src/hooks/useBudgets.ts`
-- [ ] T017 [P] [US2] Implement summary metric cards (Total Spent, Balance) in `src/components/SummaryCards.tsx`
-- [ ] T018 [P] [US2] Integrate Recharts for Category Donut chart in `src/components/CategoryChart.tsx`
-- [ ] T019 [US2] Implement Budget progress bars with threshold alerts in `src/components/BudgetMonitor.tsx`
-- [ ] T020 [US2] Create daily spending trend line chart in `src/components/TrendChart.tsx`
+- [x] T016 [P] [US2] Create Budget management hook in `src/hooks/useBudgets.ts`
+- [x] T017 [P] [US2] Implement summary metric cards (Total Spent, Balance) in `src/components/SummaryCards.tsx`
+- [x] T018 [P] [US2] Integrate Recharts for Category Donut chart in `src/components/CategoryChart.tsx`
+- [x] T019 [US2] Implement Budget progress bars with threshold alerts in `src/components/BudgetMonitor.tsx`
+- [x] T020 [US2] Create daily spending trend line chart in `src/components/TrendChart.tsx`
 
 **Checkpoint**: Dashboards and budgets are now functional and integrated with expense data.
 
@@ -90,10 +90,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T021 [P] [US3] Implement CSV/JSON export logic in `src/lib/export.ts`
-- [ ] T022 [P] [US3] Implement CSV import parser in `src/lib/import.ts`
-- [ ] T023 [US3] Create Data Settings page for import/export actions in `src/pages/Settings.tsx`
-- [ ] T024 [US3] Verify IndexedDB persistence reliability via automated refresh tests.
+- [x] T021 [P] [US3] Implement CSV/JSON export logic in `src/lib/export.ts`
+- [x] T022 [P] [US3] Implement CSV import parser in `src/lib/import.ts`
+- [x] T023 [US3] Create Data Settings page for import/export actions in `src/pages/Settings.tsx`
+- [x] T024 [US3] Verify IndexedDB persistence reliability via automated refresh tests.
 
 **Checkpoint**: Data portability and offline resilience are verified.
 
@@ -103,10 +103,10 @@
 
 **Purpose**: UI/UX refinements and final touches.
 
-- [ ] T025 [P] Implement glassmorphism design across all cards in `src/index.css`
-- [ ] T026 [P] Add skeleton loading states for charts and lists in `src/components/Skeleton.tsx`
-- [ ] T027 [P] Configure toast notifications for all CRUD actions in `src/hooks/useNotification.ts`
-- [ ] T028 Final responsive audit across mobile and desktop breakpoints.
+- [x] T025 [P] Implement glassmorphism design across all cards in `src/index.css`
+- [x] T026 [P] Add skeleton loading states for charts and lists in `src/components/Skeleton.tsx`
+- [x] T027 [P] Configure toast notifications for all CRUD actions in `src/hooks/useNotification.ts`
+- [x] T028 Final responsive audit across mobile and desktop breakpoints.
 
 ---
 
