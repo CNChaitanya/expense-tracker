@@ -18,7 +18,7 @@ export const expenses = sqliteTable('expenses', {
     .references(() => categories.id),
   date: integer('date', { mode: 'timestamp' }).notNull(),
   note: text('note'),
-  paymentMethod: text('payment_method').notNull().$type<'cash' | 'card' | 'upi'>(),
+  paymentMethod: text('payment_method').notNull().$type<'cash' | 'card' | 'upi' | 'bank'>(),
   receiptImage: text('receipt_image'),
   isRecurring: integer('is_recurring', { mode: 'boolean' }).notNull().default(false),
   recurringInterval: text('recurring_interval').$type<'weekly' | 'monthly'>(),
@@ -69,6 +69,6 @@ export const templates = sqliteTable('templates', {
   amount: integer('amount'),
   categoryId: text('category_id').references(() => categories.id),
   note: text('note'),
-  paymentMethod: text('payment_method').$type<'cash' | 'card' | 'upi'>(),
+  paymentMethod: text('payment_method').$type<'cash' | 'card' | 'upi' | 'bank'>(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });

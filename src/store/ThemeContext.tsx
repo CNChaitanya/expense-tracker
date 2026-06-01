@@ -13,7 +13,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<AppTheme>(() => {
-    return (localStorage.getItem('app_theme') as AppTheme) || 'cosmic';
+    return (localStorage.getItem('exp-theme') as AppTheme) || 'cosmic';
   });
 
   const [isAmoled, setIsAmoled] = useState(() => {
@@ -23,7 +23,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     const root = window.document.documentElement;
     root.setAttribute('data-theme', theme);
-    localStorage.setItem('app_theme', theme);
+    root.className = theme; // Also set class for easy CSS targeting
+    localStorage.setItem('exp-theme', theme);
   }, [theme]);
 
   useEffect(() => {

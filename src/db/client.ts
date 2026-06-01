@@ -1,4 +1,4 @@
-import initSqlJs from 'sql.js';
+// sql.js loaded via CDN
 // @ts-ignore - Handle potential ESM/CJS interop issues in some environments
 const initSql = typeof initSqlJs === 'function' ? initSqlJs : (initSqlJs as any).default;
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppTheme } from '../store/ThemeContext';
-import { LayoutDashboard, Receipt, Wallet, Settings, Menu, X, Sun, Bot, Target, RefreshCw, Scissors } from 'lucide-react';
+import { ChevronRight, ChevronLeft, LayoutDashboard, Receipt, Wallet, Settings, Menu, X, Sun, Bot, Target, RefreshCw, Scissors, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuroraBackground } from './visual/AuroraBackground';
 import { CursorGlow } from './visual/CursorGlow';
@@ -24,7 +24,15 @@ const getGreeting = () => {
 export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) => {
   const { isAmoled, toggleAmoled } = useAppTheme();
   const { level, levelName, progress } = useGamification();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    return localStorage.getItem('exp-sidebar-collapsed') !== 'true';
+  });
+
+  const toggleSidebar = () => {
+    const newState = !isSidebarOpen;
+    setIsSidebarOpen(newState);
+    localStorage.setItem('exp-sidebar-collapsed', String(!newState));
+  };
 
   const navItems = [
     { id: 'dash', label: 'Dashboard', icon: <LayoutDashboard size={24} /> },
@@ -42,6 +50,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
       <AuroraBackground />
       <CursorGlow />
       
+      {/* Floating Expand Button when collapsed */}
+      {!isSidebarOpen && (
+        <button 
+          onClick={toggleSidebar}
+          className="hidden md:flex fixed left-0 top-1/2 -translate-y-1/2 z-[60] bg-primary-start text-white p-2 rounded-r-xl shadow-xl hover:pl-4 transition-all group"
+        >
+          <ChevronRight size={20} className="group-hover:scale-125 transition-transform" />
+        </button>
+      )}
+
       {/* Mobile Header */}
       <div className="md:hidden glass p-4 flex justify-between items-center z-50 sticky top-0 border-b border-white/10">
         <div className="flex items-center gap-3">
@@ -55,13 +73,19 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
         </button>
       </div>
 
-      <nav className={`fixed md:sticky top-0 bottom-0 left-0 z-40 glass border-r border-white/10 md:h-screen md:py-8 md:px-4 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0 md:w-20 md:translate-x-0'} md:translate-x-0 overflow-hidden`}>
+      <nav className={`fixed md:sticky top-0 bottom-0 left-0 z-40 glass border-r border-white/10 md:h-screen md:py-8 md:px-4 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0 md:w-16 md:translate-x-0'} md:translate-x-0 overflow-hidden shadow-2xl`}>
         <div className="flex flex-col gap-4 w-full h-full min-w-[200px]">
           <div className={`hidden md:flex items-center gap-3 px-4 mb-2 transition-all ${!isSidebarOpen ? 'justify-center px-0' : ''}`}>
             <div className="w-10 h-10 shrink-0 bg-gradient-to-br from-primary-start to-primary-end rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-start/30">
               <Wallet size={24} />
             </div>
-            {isSidebarOpen && <span className="text-xl font-black tracking-tight whitespace-nowrap bg-gradient-to-br from-primary-start to-primary-end bg-clip-text text-transparent uppercase">ExpTracker</span>}
+            {isSidebarOpen && (
+              <div className="flex gap-0.5">
+                {"ExpTracker".split("").map((l, i) => (
+                   <span key={i} className="text-xl font-black tracking-tight bg-gradient-to-br from-primary-start to-primary-end bg-clip-text text-transparent uppercase inline-block" style={{ animation: `letter-float 3s ease-in-out infinite`, animationDelay: `${i * 0.1}s` }}>{l}</span>
+                ))}
+              </div>
+            )}
           </div>
 
           {isSidebarOpen && (
@@ -104,16 +128,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageCha
               className={`flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
             >
               <div className="shrink-0 text-gray-500 group-hover:text-white">
-                <Sun size={24} />
+                {isAmoled ? <Sun size={24} /> : <Moon size={24} />}
               </div>
               {isSidebarOpen && <span className="font-bold whitespace-nowrap text-gray-500 group-hover:text-white">{isAmoled ? 'Light Mode' : 'AMOLED Mode'}</span>}
             </button>
             <button 
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              onClick={toggleSidebar}
               className={`hidden md:flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-colors w-full group ${!isSidebarOpen ? 'justify-center' : ''}`}
             >
                <div className="shrink-0 text-gray-500 group-hover:text-white">
-                  {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                  {isSidebarOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
                </div>
                {isSidebarOpen && <span className="font-bold whitespace-nowrap text-gray-500 group-hover:text-white">Collapse</span>}
             </button>
