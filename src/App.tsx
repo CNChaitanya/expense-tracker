@@ -11,7 +11,7 @@ import { CategoryChart } from './components/CategoryChart';
 import { BudgetMonitor } from './components/BudgetMonitor';
 import { TrendChart } from './components/TrendChart';
 import { Settings } from './components/Settings';
-import { Plus, Clock, ChevronRight } from 'lucide-react';
+import { Plus, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import { DashboardSkeleton } from './components/Skeleton';
 import { useNotifications } from './hooks/useNotification';
 import { ToastContainer } from './components/ToastContainer';
@@ -21,6 +21,7 @@ import { SmartInsights } from './components/SmartInsights';
 import { MonthlyReportCard } from './components/MonthlyReportCard';
 import { GlobalSearch } from './components/GlobalSearch';
 import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
+import { playSound } from './lib/sounds';
 import { AICoach } from './components/AICoach';
 import { SavingsGoals } from './pages/SavingsGoals';
 import { FinancialHealthScore } from './components/FinancialHealthScore';
@@ -31,6 +32,8 @@ import { TransactionTimeline } from './pages/TransactionTimeline';
 import { CurrencyConverter } from './components/CurrencyConverter';
 import { Login } from './pages/Login';
 import { motion, AnimatePresence } from 'framer-motion';
+
+import { Onboarding } from './components/Onboarding';
 
 function Dashboard() {
   const { expenses } = useExpenses();
@@ -98,9 +101,11 @@ function Dashboard() {
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('dash');
   const [showForm, setShowForm] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [editExpenseId, setEditExpenseId] = useState<string | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   
   const { isReady, error } = useDatabase();
   const { toasts } = useNotifications();
@@ -108,7 +113,15 @@ function AppContent() {
   useEffect(() => {
     const user = localStorage.getItem('exp-auth-user');
     setIsAuthenticated(!!user);
+    if (user && !localStorage.getItem('exp-onboarding-done')) {
+      setShowOnboarding(true);
+    }
   }, []);
+
+  const completeOnboarding = () => {
+    localStorage.setItem('exp-onboarding-done', 'true');
+    setShowOnboarding(false);
+  };
 
   useGlobalShortcuts(
     () => { setEditExpenseId(null); setShowForm(true); },
@@ -116,6 +129,13 @@ function AppContent() {
     (page) => setCurrentPage(page as Page),
     () => { setShowForm(false); setShowSearch(false); setEditExpenseId(null); }
   );
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    playSound('add');
+    await new Promise(r => setTimeout(r, 1000));
+    window.location.reload();
+  };
 
   const handleEditExpense = (id: string) => {
     setEditExpenseId(id);
@@ -208,6 +228,29 @@ function AppContent() {
   return (
     <Layout currentPage={['subscriptions', 'coach'].includes(currentPage) ? 'budgets' : currentPage === 'splitter' || currentPage === 'timeline' ? 'expenses' : currentPage} onPageChange={setCurrentPage}>
       <ToastContainer toasts={toasts} />
+      
+      {/* Pull to refresh simulation */}
+      <motion.div 
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 100 }}
+        onDragEnd={(_, info) => {
+          if (info.offset.y > 80) handleRefresh();
+        }}
+        className="fixed top-0 left-0 right-0 z-50 pointer-events-none"
+      >
+         {isRefreshing && (
+            <div className="flex justify-center pt-4">
+               <div className="p-3 glass rounded-full animate-spin text-primary-start">
+                  <RefreshCw size={24} />
+               </div>
+            </div>
+         )}
+      </motion.div>
+
+      <AnimatePresence>
+         {showOnboarding && <Onboarding onComplete={completeOnboarding} />}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
          <motion.div 
            key={currentPage}

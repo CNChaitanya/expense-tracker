@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useExpenses } from '../hooks/useExpenses';
 import { exportToCSV, exportToJSON } from '../lib/export';
 import { parseCSV } from '../lib/import';
-import { Download, Upload, Database, Trash2, Volume2, VolumeX, Settings as SettingsIcon, Palette, Zap, FileText, Sparkles, LogOut, Key } from 'lucide-react';
+import { Download, Upload, Database, Trash2, Volume2, VolumeX, Settings as SettingsIcon, Palette, Zap, FileText, Sparkles, LogOut, Key, Eye, EyeOff } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { useAppTheme } from '../store/ThemeContext';
 import { BankImport } from './BankImport';
@@ -16,6 +16,7 @@ export const Settings: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [showBankImport, setShowBankImport] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
 
   useEffect(() => {
     setSoundEnabled(localStorage.getItem('sound_effects') === 'true');
@@ -187,13 +188,22 @@ export const Settings: React.FC = () => {
                     <span className="text-[10px] font-black uppercase tracking-widest">AI Coach API Key</span>
                  </div>
                  <div className="flex gap-2">
-                    <input 
-                      id="anthropic-key"
-                      type="password"
-                      placeholder="sk-ant-..."
-                      defaultValue={localStorage.getItem('exp-anthropic-key') || ''}
-                      className="flex-1 bg-white/10 border border-white/10 rounded-2xl px-5 py-3 font-bold text-sm focus:border-primary-start outline-none"
-                    />
+                    <div className="relative flex-1">
+                       <input 
+                         id="anthropic-key"
+                         type={showApiKey ? "text" : "password"}
+                         placeholder="sk-ant-..."
+                         defaultValue={localStorage.getItem('exp-anthropic-key') || ''}
+                         className="w-full bg-white/10 border border-white/10 rounded-2xl pl-5 pr-12 py-3 font-bold text-sm focus:border-primary-start outline-none"
+                       />
+                       <button 
+                         type="button" 
+                         onClick={() => setShowApiKey(!showApiKey)}
+                         className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                       >
+                          {showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
+                       </button>
+                    </div>
                     <button onClick={handleSaveApiKey} className="px-5 py-3 bg-primary-start rounded-2xl text-white font-black text-xs hover:bg-primary-end transition-all shadow-lg">Save</button>
                  </div>
               </div>

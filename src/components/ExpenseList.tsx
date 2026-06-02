@@ -120,8 +120,20 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEdit }) => {
             <motion.div 
               key={expense.id} 
               variants={itemVariants}
+              drag="x"
+              dragConstraints={{ left: -100, right: 0 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -80) {
+                  handleDelete(expense.id);
+                }
+              }}
               className="glass p-6 rounded-[32px] flex flex-col sm:flex-row items-start sm:items-center justify-between group card-hover relative overflow-hidden border border-white/5"
             >
+              {/* Background Delete Indicator */}
+              <div className="absolute inset-0 bg-red-500/20 flex items-center justify-end px-8 -z-10 opacity-0 group-drag:opacity-100 transition-opacity">
+                 <Trash2 className="text-red-500" />
+              </div>
+...
               <div className="flex items-start gap-5 relative z-10 w-full sm:w-auto">
                 <div className={`p-4 rounded-[20px] bg-white/5 ${category?.color || 'text-gray-500'} relative shadow-inner`}>
                   <Icon size={24} className="group-hover:scale-110 transition-transform" />

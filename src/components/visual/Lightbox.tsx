@@ -11,6 +11,18 @@ interface LightboxProps {
 export const Lightbox: React.FC<LightboxProps> = ({ image, onClose }) => {
   const [scale, setScale] = React.useState(1);
 
+  const handlePinch = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const distance = Math.hypot(
+        e.touches[0].pageX - e.touches[1].pageX,
+        e.touches[0].pageY - e.touches[1].pageY
+      );
+      // Basic pinch simulation
+      const newScale = Math.min(Math.max(distance / 200, 0.5), 3);
+      setScale(newScale);
+    }
+  };
+
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = image;
@@ -60,6 +72,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ image, onClose }) => {
             alt="Receipt"
             style={{ scale }}
             className="max-w-full max-h-full object-contain rounded-xl shadow-2xl transition-transform duration-200"
+            onTouchMove={handlePinch}
             onClick={(e) => e.stopPropagation()}
           />
         </motion.div>
